@@ -10,7 +10,7 @@ if (isset($_SESSION['log'])) {
   header('location:index.php');
 }
 
-// ninguem esta logado
+// ninguem está logado
 
 // de onde chegou?
 // veio ter a este script a partir do formulário
@@ -22,15 +22,24 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
   // verificar se correspondem na bd
 
+  // liga-se à BD
   include_once 'connect.php';
 
+ // prepared statements
   $SQLp = "SELECT * FROM users WHERE username = ? AND password = ? ";
 
+  // prepara a interrogação
   $prepared = $myconn->prepare($SQLp);
+  // associa os parâmetros às variáveis
   $prepared->bind_param("ss",$username,$password);
+  // executa a interrogação SQL
   $prepared->execute();
+
+  // obtem o resultado
   $result = $prepared->get_result();
 
+  // se houver um "match" username / password na BD
+  // então há um login válido
   if ($result->num_rows == 1) {
     //login válido
     $_SESSION['log'] = $username;
